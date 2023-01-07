@@ -41,7 +41,12 @@ class MontyHall {
   private getRandom(min: number = 0, max: number = 2) {
     min = Math.ceil(min);
     max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1) + min);
+
+    const array = new Uint32Array(1);
+    const upperMargin = Math.pow(2, 32) - 1;
+    const randomValue = window.crypto.getRandomValues(array)[0] / upperMargin;
+
+    return Math.floor(randomValue * (max - min + 1) + min);
   }
 
   private getCopy<T>(value: T) {
@@ -65,10 +70,16 @@ class MontyHall {
     const montyHallSelectedDoor =
       montyHallDoors[this.getRandom(0, montyHallDoors.length - 1)];
 
-    const secondCheckDoor = this.getCopy([
-      firstCheckDoor,
-      montyHallSelectedDoor
-    ])[this.getRandom(0, 1)];
+    const montyHallFreeDoors = montyHallDoors.filter(
+      (door) => door.id !== montyHallSelectedDoor.id
+    );
+
+    const availableDoors = [firstCheckDoor, ...montyHallFreeDoors];
+
+    const secondCheckDoor =
+      this.getCopy(availableDoors)[
+        this.getRandom(0, montyHallFreeDoors.length)
+      ];
 
     return secondCheckDoor;
   }

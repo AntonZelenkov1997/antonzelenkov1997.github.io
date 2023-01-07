@@ -7,19 +7,29 @@ export default defineComponent({
       valid: false,
       iterationCount: 100,
       rules: {
-        required: (value: string) => !!value || 'Поле не должно быть пустым',
-        counter: (value: string | number) => {  
+        required: (value: string) => {
+          return !!value || 'Поле не должно быть пустым';
+        },
+        counter: (value: string | number) => {
           return value.toString().length <= 10 || 'Максимум 10 символов';
         },
         nonZero: (value: string) => {
           return !/^0/gm.test(value) || 'Поле не должно начинаться с 0';
+        },
+        nonSeparators: (value: string) => {
+          return (
+            !/[.,]+/gm.test(value) ||
+            'Поле не должно иметь разделяющих запятых или точек'
+          );
         }
       }
     };
   },
   methods: {
     onSubmit() {
-      this.$emit('submit', this.iterationCount);
+      if (this.valid) {
+        this.$emit('submit', this.iterationCount);
+      }
     }
   },
   emits: ['submit']
@@ -31,7 +41,7 @@ export default defineComponent({
     <v-container>
       <v-row>
         <v-col cols="12" md="12" class="column">
-          <h2>Введи количество итераций</h2>
+          <h2>Введите количество итераций</h2>
         </v-col>
       </v-row>
 
@@ -68,6 +78,10 @@ export default defineComponent({
 
   .button {
     height: calc(100% - 22px);
+
+    @media screen and (width < 960px) {
+      height: var(--v-btn-height);
+    }
   }
 }
 </style>
