@@ -81,7 +81,7 @@ export default defineComponent({
     width: fit-content;
     max-width: 100%;
     position: absolute;
-    top: 13%;
+    translate: 0 -12rem;
 
     &-title {
       font-size: 3.25rem;
