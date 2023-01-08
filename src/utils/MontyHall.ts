@@ -70,16 +70,13 @@ class MontyHall {
     const montyHallSelectedDoor =
       montyHallDoors[this.getRandom(0, montyHallDoors.length - 1)];
 
-    const montyHallFreeDoors = montyHallDoors.filter(
+    const montyHallFreeDoors = this.doors.filter(
       (door) => door.id !== montyHallSelectedDoor.id
     );
 
-    const availableDoors = [firstCheckDoor, ...montyHallFreeDoors];
-
-    const secondCheckDoor =
-      this.getCopy(availableDoors)[
-        this.getRandom(0, montyHallFreeDoors.length)
-      ];
+    const secondCheckDoor = montyHallFreeDoors.find(
+      (door) => door.id !== firstCheckDoor.id
+    );
 
     return secondCheckDoor;
   }
@@ -90,7 +87,7 @@ class MontyHall {
     while (currentIteration < this.iterationCount) {
       const check = this.doorCheck();
 
-      if (check.win) ++this.countOfWin;
+      if (check?.win) ++this.countOfWin;
       else ++this.countOfLose;
 
       currentIteration++;

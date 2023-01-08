@@ -4,7 +4,7 @@ import { defineComponent } from '@vue/runtime-core';
 export default defineComponent({
   data() {
     return {
-      valid: false,
+      valid: true,
       iterationCount: 100,
       rules: {
         required: (value: string) => {
@@ -27,7 +27,7 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
-      if (this.valid) {
+      if (this.valid || this.valid === null) {
         this.$emit('submit', this.iterationCount);
       }
     }
