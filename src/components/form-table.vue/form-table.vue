@@ -12,7 +12,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <v-table fixed-header>
+  <v-table class="form-table__table">
     <thead>
       <tr>
         <th class="text-left">Название</th>

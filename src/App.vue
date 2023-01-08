@@ -50,11 +50,14 @@ export default defineComponent({
         <h1 class="app__card-title">Симуляция кейса Монти-Холла</h1>
       </div>
       <form-values class="app__form-values" @submit="initMontyHall" />
-      <transition name="show">
-        <v-container v-if="tableData.length" class="app__container">
-          <form-table :tableData="tableData" />
-        </v-container>
-      </transition>
+
+      <div class="app__flex">
+        <transition name="show">
+          <v-container v-if="tableData.length" class="app__container">
+            <form-table :tableData="tableData" />
+          </v-container>
+        </transition>
+      </div>
     </div>
   </section>
 </template>
@@ -75,13 +78,19 @@ export default defineComponent({
   }
 
   &__form-values {
+    transition: flex 0.2s ease-in-out;
     width: 100%;
+    flex: 0;
+    display: flex;
+    align-items: center;
   }
   &__card {
+    transition: flex 0.2s ease-in-out;
     width: fit-content;
     max-width: 100%;
-    position: absolute;
-    translate: 0 -12rem;
+    display: flex;
+    flex: 1;
+    align-items: center;
 
     &-title {
       font-size: 3.25rem;
@@ -102,7 +111,14 @@ export default defineComponent({
   }
 
   &__container {
-    clip-path: inset(0 0 0 0);
+    overflow: hidden;
+  }
+
+  &__flex {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    transition: flex 0.2s ease-in-out;
   }
 
   .show {
@@ -113,22 +129,22 @@ export default defineComponent({
 
       &-active {
         padding: 0 16px;
-        transition: padding 0.2s ease-in-out, height 0.2s ease-in-out;
+        transition: padding .2s ease-in-out, height .2s ease-in-out;
       }
 
       &-to {
         padding: 16px;
-        height: 298px;
+        height: 100%;
       }
     }
     &-leave {
       &-from {
-        height: 298px;
+        height: 100%;
       }
 
       &-active {
         padding: 16px;
-        transition: padding 0.2s ease-in-out, height 0.2s ease-in-out;
+        transition: padding .2s ease-in-out, height .2s ease-in-out;
       }
 
       &-to {
