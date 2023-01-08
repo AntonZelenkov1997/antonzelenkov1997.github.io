@@ -17,9 +17,9 @@ export default defineComponent({
     };
   },
   methods: {
-    initMontyHall(iterationCount: number | null) {
+    initMontyHall(iterationCount: number, doorsCount: number) {
       if (iterationCount) {
-        const montyHall = new MontyHall(iterationCount);
+        const montyHall = new MontyHall(iterationCount, doorsCount);
         this.results = montyHall.init();
       }
     }

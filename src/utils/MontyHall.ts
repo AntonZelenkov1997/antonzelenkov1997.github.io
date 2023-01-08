@@ -10,35 +10,19 @@ export interface MontyHallResult {
   percentOfWinning: string;
 }
 
-type DoorsEntity = DoorEntity[];
-
-const initialDoors: DoorsEntity = [
-  {
-    id: 'A',
-    win: false
-  },
-  {
-    id: 'B',
-    win: false
-  },
-  {
-    id: 'C',
-    win: false
-  }
-];
-
 class MontyHall {
-  private doors: DoorsEntity;
+  private doors: DoorEntity[] = [];
+  private doorsCount = 0;
   private countOfWin = 0;
   private countOfLose = 0;
   private iterationCount: number;
 
-  constructor(iterationCount: number) {
-    this.doors = this.getCopy(initialDoors);
+  constructor(iterationCount: number, doorsCount: number) {
+    this.doorsCount = doorsCount;
     this.iterationCount = iterationCount;
   }
 
-  private getRandom(min: number = 0, max: number = 2) {
+  private getRandom(min: number = 0, max: number = this.doorsCount - 1) {
     min = Math.ceil(min);
     max = Math.floor(max);
 
@@ -54,31 +38,29 @@ class MontyHall {
   }
 
   private generateDoors() {
-    this.doors = this.getCopy(initialDoors);
+    this.doors = [...new Array(this.doorsCount)].map(
+      (_, index) => ({ id: index.toString(), win: false } as DoorEntity)
+    );
+
     const winningIndex = this.getRandom();
     this.doors[winningIndex].win = true;
   }
 
   private doorCheck() {
     this.generateDoors();
+
     const firstCheckDoor = this.getCopy(this.doors[this.getRandom()]);
 
-    const montyHallDoors = this.doors.filter(
-      (door) => !door.win && firstCheckDoor.id !== door.id
+    const montyHallAvailableDoors = this.doors.filter(
+      (door) => firstCheckDoor.id !== door.id
     );
 
-    const montyHallSelectedDoor =
-      montyHallDoors[this.getRandom(0, montyHallDoors.length - 1)];
-
-    const montyHallFreeDoors = this.doors.filter(
-      (door) => door.id !== montyHallSelectedDoor.id
+    return (
+      montyHallAvailableDoors.find((door) => door.win) ??
+      montyHallAvailableDoors[
+        this.getRandom(0, montyHallAvailableDoors.length - 1)
+      ]
     );
-
-    const secondCheckDoor = montyHallFreeDoors.find(
-      (door) => door.id !== firstCheckDoor.id
-    );
-
-    return secondCheckDoor;
   }
 
   public init(): MontyHallResult {
@@ -87,7 +69,7 @@ class MontyHall {
     while (currentIteration < this.iterationCount) {
       const check = this.doorCheck();
 
-      if (check?.win) ++this.countOfWin;
+      if (check.win) ++this.countOfWin;
       else ++this.countOfLose;
 
       currentIteration++;

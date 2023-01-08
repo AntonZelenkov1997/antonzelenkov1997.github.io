@@ -6,6 +6,7 @@ export default defineComponent({
     return {
       valid: true,
       iterationCount: 100,
+      doorsCount: 3,
       rules: {
         required: (value: string) => {
           return !!value || 'Поле не должно быть пустым';
@@ -21,6 +22,9 @@ export default defineComponent({
             !/[.,]+/gm.test(value) ||
             'Поле не должно иметь разделяющих запятых или точек'
           );
+        },
+        nonLessThanThree: (value: string) => {
+          return Number(value) > 2 || 'Дверей не может быть меньше 3';
         }
       }
     };
@@ -28,7 +32,7 @@ export default defineComponent({
   methods: {
     onSubmit() {
       if (this.valid || this.valid === null) {
-        this.$emit('submit', this.iterationCount);
+        this.$emit('submit', Number(this.iterationCount), Number(this.doorsCount));
       }
     }
   },
@@ -40,13 +44,7 @@ export default defineComponent({
   <v-form v-model="valid" @submit.prevent="onSubmit">
     <v-container>
       <v-row>
-        <v-col cols="12" md="12" class="column">
-          <h2>Введите количество итераций</h2>
-        </v-col>
-      </v-row>
-
-      <v-row>
-        <v-col cols="12" md="10" class="column">
+        <v-col cols="12" md="5" class="column">
           <v-text-field
             type="number"
             @wheel="() => {}"
@@ -54,12 +52,32 @@ export default defineComponent({
             v-model="iterationCount"
             counter
             maxlength="10"
-            :rules="Object.values(rules)"
+            :rules="[
+              rules.required,
+              rules.counter,
+              rules.nonZero,
+              rules.nonSeparators
+            ]"
             step="10"
             clearable
             label="Итерации"
             required
-          ></v-text-field>
+          />
+        </v-col>
+        <v-col cols="12" md="5" class="column">
+          <v-text-field
+            type="number"
+            @wheel="() => {}"
+            :hide-spin-buttons="true"
+            v-model="doorsCount"
+            counter
+            maxlength="10"
+            :rules="Object.values(rules)"
+            step="10"
+            clearable
+            label="Двери"
+            required
+          />
         </v-col>
         <v-col cols="12" md="2" class="column">
           <v-btn color="primary" class="button" type="submit">
